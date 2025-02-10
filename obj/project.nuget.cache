@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "a1qtW71MSpw=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\iagol\\source\\repos\\urlShortener\\urlShortener.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\iagol\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.0\\microsoft.aspnetcore.openapi.9.0.0.nupkg.sha512",
+    "C:\\Users\\iagol\\.nuget\\packages\\microsoft.openapi\\1.6.17\\microsoft.openapi.1.6.17.nupkg.sha512",
+    "C:\\Users\\iagol\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\7.2.0\\swashbuckle.aspnetcore.swaggerui.7.2.0.nupkg.sha512"
+  ],
+  "logs": []
+}

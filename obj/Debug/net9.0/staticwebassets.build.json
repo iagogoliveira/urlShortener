@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "r957JtrD5ApJ9nlGQmFD5QYn8kPdRGL4qWNS5HQKlFo=",
+  "Source": "urlShortener",
+  "BasePath": "_content/urlShortener",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}
