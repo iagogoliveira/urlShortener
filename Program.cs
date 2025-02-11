@@ -12,7 +12,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-    app.UseSwaggerUI(options => options.SwaggerEndpoint("/openapi/v1.json", "weather api"));
+    app.UseSwaggerUI(options => options.SwaggerEndpoint("/openapi/v1.json", "urlShortner API"));
 }
 
 app.UseHttpsRedirection();

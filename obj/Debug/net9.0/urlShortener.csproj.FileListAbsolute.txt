@@ -33,3 +33,4 @@ C:\Users\iagol\source\repos\urlShortener\obj\Debug\net9.0\urlShortener.pdb
 C:\Users\iagol\source\repos\urlShortener\obj\Debug\net9.0\urlShortener.genruntimeconfig.cache
 C:\Users\iagol\source\repos\urlShortener\obj\Debug\net9.0\ref\urlShortener.dll
 C:\Users\iagol\source\repos\urlShortener\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Users\iagol\source\repos\urlShortener\obj\Debug\net9.0\urlShortener.sourcelink.json
