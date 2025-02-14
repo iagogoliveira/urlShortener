@@ -2,13 +2,21 @@
 {
     public class Address
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string OriginalUrl { get; set; }
         public string NewUrl { get; set; }
-        public int UserId { get; set; }
+        public Guid UserId { get; set; }
 
-        public Address(string originalUrl, int userId)
+        public Address(Guid id, string originalUrl, string newUrl, Guid userId)
         {
+            Id = id;
+            OriginalUrl = originalUrl;
+            NewUrl = newUrl;
+            UserId = userId;
+        }
+        public Address(Guid id, string originalUrl, Guid userId)
+        {
+            Id = id;
             OriginalUrl = originalUrl;
             UserId = userId;
         }

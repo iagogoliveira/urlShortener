@@ -14,5 +14,21 @@
       }
     ],
     "ReturnTypes": []
+  },
+  {
+    "ContainingType": "urlShortener.Controllers.UrlController",
+    "Method": "UpdateUrl",
+    "RelativePath": "Url/UpdateUrl",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "urlDto",
+        "Type": "urlShortener.DTOs.UpdateUrlDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
   }
 ]

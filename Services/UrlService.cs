@@ -6,35 +6,84 @@ namespace urlShortener.Services
     public class UrlService
     {
         private readonly IUrlRepository _urlRepository;
-        private readonly IConfiguration _configuration;
 
-        public UrlService(IUrlRepository urlRepository, IConfiguration configuration)
+        public UrlService(IUrlRepository urlRepository)
         {
             _urlRepository = urlRepository;
-            _configuration = configuration;
         }
-
         public async Task CreateNewUrl(Address url)
         {
-            string baseUrl = _configuration["UrlShortener:BaseUrl"];
+            url.NewUrl = await GenerateFullUrl();
+            await _urlRepository.AddUrl(url);
+        }
 
-            string shortUrl;
-            string fullShortUrl;
+        public async Task UpdateUrl(Guid id, string originalUrl, string path)
+        {
+            var urlObject = GetUrl(id);
 
-            do
+            if(urlObject.Result.OriginalUrl != originalUrl)
             {
-                shortUrl = GenerateShortUrl();
-                fullShortUrl = $"{baseUrl}/{shortUrl}";
+                urlObject.Result.OriginalUrl = originalUrl;
+
             }
-            while (await _urlRepository.ExistsAsync(fullShortUrl));
 
-            url.NewUrl = fullShortUrl;
+            if(path != null)
+            {
+                urlObject.Result.NewUrl = await GenerateCustomPath(path);
+            }
 
-            _urlRepository.Add(url);
+            await _urlRepository.UpdateUrl(urlObject.Result);
+        }
+
+        public async Task<Address> GetUrl(Guid url)
+        {
+            return  await _urlRepository.GetUrl(url);
         }
 
 
-        private string GenerateShortUrl()
+        public async Task DeleteUrl(Guid id)
+        {
+            try
+            {
+                await _urlRepository.DeleteUrl(id);
+            }
+            catch(Exception ex)
+            {
+                throw new InvalidOperationException("Url not found.");
+            }
+        }
+
+
+
+        private async Task<string> GenerateCustomPath(string customPath)
+        {
+            string newUrl = _urlRepository.FormatUrl(customPath);
+
+
+            if (!await _urlRepository.ExistsAsync(newUrl))
+            {
+                return newUrl;
+            }
+
+            throw new InvalidOperationException("Custom path already exists.");
+        }
+
+
+        private async Task<string> GenerateFullUrl()
+        {
+            string urlPath;
+            string fullUrl;
+            do
+            {
+                urlPath = GenerateUrlPath();
+                fullUrl = _urlRepository.FormatUrl(urlPath);
+            }
+            while (await _urlRepository.ExistsAsync(fullUrl));
+            return fullUrl;
+
+
+        }
+        private string GenerateUrlPath()
         {
             const string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
             var random = new Random();
