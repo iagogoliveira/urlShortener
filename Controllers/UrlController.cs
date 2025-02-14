@@ -18,7 +18,7 @@ namespace urlShortener.Controllers
 
 
         [HttpPost("CreateNewUrl")]
-        public IActionResult CreateNewUrl([FromBody] CreateNewUrlDto urlDto) 
+        public async Task<IActionResult> CreateNewUrl([FromBody] CreateNewUrlDto urlDto) 
         {
 
             if (urlDto == null)
@@ -26,13 +26,11 @@ namespace urlShortener.Controllers
                 return BadRequest("Url cannot de null.");
             }
 
-            //TODO - Create a method that generate a new url
-
-            var url = new Address(urlDto.NewUrl, urlDto.OriginalUrl, urlDto.UserId);
+            var url = new Address(urlDto.OriginalUrl, urlDto.UserId);
 
             try
             {
-                _urlService.CreateNewUrl(url);
+                await _urlService.CreateNewUrl(url);
             }
             catch (Exception ex)
             {

@@ -5,7 +5,7 @@ namespace urlShortener.Data
 {
     public class AppDbContext : DbContext
     {
-        DbSet<Address> Addresses { get; set; }
+        public DbSet<Address> Addresses { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -13,6 +13,12 @@ namespace urlShortener.Data
                             options => options.MigrationsHistoryTable("__MigrationsHistory_urlShortener"));
 
             base.OnConfiguring(optionsBuilder);
+        }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Address>()
+                .HasIndex(u => u.NewUrl)
+                .IsUnique();
         }
     }
 }

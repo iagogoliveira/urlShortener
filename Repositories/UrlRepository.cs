@@ -1,4 +1,5 @@
-﻿using urlShortener.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using urlShortener.Data;
 using urlShortener.Models;
 
 namespace urlShortener.Repositories
@@ -10,10 +11,23 @@ namespace urlShortener.Repositories
         public UrlRepository(AppDbContext context) {_context = context;}
 
 
-        private void Add (Address url)
+        public void Add (Address url)
         {
             _context.Add(url);
             _context.SaveChanges();
+        }
+
+        public async Task<bool> ExistsAsync(string fullShortUrl)
+        {
+            try
+            {
+                return await _context.Addresses.AnyAsync(u => u.NewUrl == fullShortUrl);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message.ToString());
+                return false;
+            }
         }
 
     }

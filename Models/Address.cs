@@ -7,10 +7,9 @@
         public string NewUrl { get; set; }
         public int UserId { get; set; }
 
-        public Address(string originalUrl, string newUrl, int userId)
+        public Address(string originalUrl, int userId)
         {
             OriginalUrl = originalUrl;
-            NewUrl = newUrl;
             UserId = userId;
         }
     }
