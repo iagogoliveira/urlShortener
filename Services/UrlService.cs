@@ -1,5 +1,6 @@
 ﻿using urlShortener.Repositories;
 using urlShortener.Models;
+using System;
 
 namespace urlShortener.Services
 {
@@ -38,6 +39,11 @@ namespace urlShortener.Services
         public async Task<Address> GetUrl(Guid url)
         {
             return  await _urlRepository.GetUrl(url);
+        } 
+        public async Task<Address> GetUrlRedirect(string shortUrl)
+        {
+            var url = _urlRepository.FormatUrl(shortUrl);
+            return  await _urlRepository.GetUrlRedirect(url);
         }
 
 

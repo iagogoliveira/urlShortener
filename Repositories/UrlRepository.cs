@@ -28,6 +28,12 @@ namespace urlShortener.Repositories
         {
             return await _context.Addresses.FindAsync(url);
         }
+        
+        
+        public async Task<Address> GetUrlRedirect(string shortUrl)
+        {
+            return await _context.Addresses.FirstOrDefaultAsync(_ => _.NewUrl == shortUrl);
+        }
 
         public async Task<Address> UpdateUrl(Address url)
         {
@@ -52,6 +58,7 @@ namespace urlShortener.Repositories
         public async Task DeleteUrl(Guid id)
         {
             _context.Addresses.Remove(await GetUrl(id));
+            await _context.SaveChangesAsync();
         }
 
         public string FormatUrl(string path)

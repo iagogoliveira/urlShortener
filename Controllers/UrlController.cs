@@ -6,7 +6,7 @@ using urlShortener.Services;
 namespace urlShortener.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("")]
     public class UrlController : ControllerBase
     {
 
@@ -41,7 +41,7 @@ namespace urlShortener.Controllers
             return Ok();
         }
 
-        [HttpPost("UpdateUrl")]
+        [HttpPut("UpdateUrl")]
         public async Task<IActionResult> UpdateUrl([FromBody] UpdateUrlDto urlDto)
         {
 
@@ -67,7 +67,7 @@ namespace urlShortener.Controllers
             return Ok();
         }
 
-        [HttpPost("DeleteUrl")]
+        [HttpDelete("DeleteUrl")]
         public async Task<IActionResult> DeleteUrl([FromBody] DeleteUrlDto urlDto)
         {
 
@@ -91,6 +91,29 @@ namespace urlShortener.Controllers
             }
 
             return Ok();
+        }
+
+        [HttpGet("{redirectUrl}")]
+        public async Task<IActionResult> RedirectUrl(string redirectUrl)
+        {
+            if (redirectUrl == null)
+            {
+                return BadRequest("Url cannot de null.");
+            }
+            try
+            {
+                var urlRedirect = await _urlService.GetUrlRedirect(redirectUrl);
+                return Redirect(urlRedirect.OriginalUrl);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return BadRequest(ex.ToString());
+            }
         }
 
 

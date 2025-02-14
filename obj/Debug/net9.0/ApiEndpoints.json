@@ -1,8 +1,24 @@
 [
   {
     "ContainingType": "urlShortener.Controllers.UrlController",
+    "Method": "RedirectUrl",
+    "RelativePath": "{redirectUrl}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "redirectUrl",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "urlShortener.Controllers.UrlController",
     "Method": "CreateNewUrl",
-    "RelativePath": "Url/CreateNewUrl",
+    "RelativePath": "CreateNewUrl",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -17,9 +33,25 @@
   },
   {
     "ContainingType": "urlShortener.Controllers.UrlController",
+    "Method": "DeleteUrl",
+    "RelativePath": "DeleteUrl",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "urlDto",
+        "Type": "urlShortener.DTOs.DeleteUrlDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "urlShortener.Controllers.UrlController",
     "Method": "UpdateUrl",
-    "RelativePath": "Url/UpdateUrl",
-    "HttpMethod": "POST",
+    "RelativePath": "UpdateUrl",
+    "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
     "Parameters": [
