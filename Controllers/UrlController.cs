@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using urlShortener.DTOs;
 using urlShortener.Models;
 using urlShortener.Services;
@@ -16,7 +17,7 @@ namespace urlShortener.Controllers
             _urlService = urlService;
         }
 
-
+        [Authorize]
         [HttpPost("CreateNewUrl")]
         public async Task<IActionResult> CreateNewUrl([FromBody] CreateNewUrlDto urlDto) 
         {
@@ -41,6 +42,7 @@ namespace urlShortener.Controllers
             return Ok();
         }
 
+        [Authorize]
         [HttpPut("UpdateUrl")]
         public async Task<IActionResult> UpdateUrl([FromBody] UpdateUrlDto urlDto)
         {
@@ -67,6 +69,7 @@ namespace urlShortener.Controllers
             return Ok();
         }
 
+        [Authorize]
         [HttpDelete("DeleteUrl")]
         public async Task<IActionResult> DeleteUrl([FromBody] DeleteUrlDto urlDto)
         {
