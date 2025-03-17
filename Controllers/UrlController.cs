@@ -17,26 +17,24 @@ namespace urlShortener.Controllers
             _urlService = urlService;
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpPost("CreateNewUrl")]
         public async Task<IActionResult> CreateNewUrl([FromBody] CreateNewUrlDto urlDto) 
         {
-
-            if (urlDto == null)
-            {
-                return BadRequest("Url cannot de null.");
-            }
-
             var url = new Address(Guid.NewGuid(), urlDto.OriginalUrl, urlDto.UserId);
 
             try
             {
                 await _urlService.CreateNewUrl(url);
             }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
-                return BadRequest(ex.ToString());
+                Console.WriteLine(ex.Message);
+                return BadRequest(ex.Message);
             }
 
             return Ok();
@@ -46,24 +44,18 @@ namespace urlShortener.Controllers
         [HttpPut("UpdateUrl")]
         public async Task<IActionResult> UpdateUrl([FromBody] UpdateUrlDto urlDto)
         {
-
-            if (urlDto == null)
-            {
-                return BadRequest("Url cannot de null.");
-            }
-
             try
             {
                 await _urlService.UpdateUrl(urlDto.Id, urlDto.OriginalUrl, urlDto.NewPath);
             }
             catch (InvalidOperationException ex)
             {
-                return BadRequest(ex.ToString());
+                return BadRequest(ex.Message);
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
-                return BadRequest(ex.ToString());
+                Console.WriteLine(ex.Message);
+                return BadRequest(ex.Message);
             }
 
             return Ok();
@@ -72,25 +64,19 @@ namespace urlShortener.Controllers
         [Authorize]
         [HttpDelete("DeleteUrl")]
         public async Task<IActionResult> DeleteUrl([FromBody] DeleteUrlDto urlDto)
-        {
-
-            if (urlDto == null)
-            {
-                return BadRequest("Url cannot de null.");
-            }
-
+        { 
             try
             {
                 await _urlService.DeleteUrl(urlDto.Id);
             }
             catch (InvalidOperationException ex)
             {
-                return BadRequest(ex.ToString());
+                return BadRequest(ex.Message);
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
-                return BadRequest(ex.ToString());
+                Console.WriteLine(ex.Message);
+                return BadRequest(ex.Message);
             }
 
             return Ok();

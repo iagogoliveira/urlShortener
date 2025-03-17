@@ -1,12 +1,14 @@
 ﻿using urlShortener.Repositories;
 using urlShortener.Models;
 using System;
+using System.Text.RegularExpressions;
 
 namespace urlShortener.Services
 {
     public class UrlService
     {
         private readonly IUrlRepository _urlRepository;
+        private static readonly string pattern = @"(https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z]{2,}(\.[a-zA-Z]{2,})(\.[a-zA-Z]{2,})?\/[a-zA-Z0-9]{2,}|((https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z]{2,}(\.[a-zA-Z]{2,})(\.[a-zA-Z]{2,})?)|(https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z0-9]{2,}\.[a-zA-Z0-9]{2,}\.[a-zA-Z0-9]{2,}(\.[a-zA-Z0-9]{2,})?";
 
         public UrlService(IUrlRepository urlRepository)
         {
@@ -14,26 +16,55 @@ namespace urlShortener.Services
         }
         public async Task CreateNewUrl(Address url)
         {
-            url.NewUrl = await GenerateFullUrl();
-            await _urlRepository.AddUrl(url);
-        }
+            if (string.IsNullOrEmpty(url.OriginalUrl))
+            {
+                throw new InvalidOperationException("Url cannot be null.");
+            }
 
+            if (!CheckValidUrl(url.OriginalUrl))
+            {
+                throw new InvalidOperationException("Invalid URL.");
+            }
+
+            try
+            {
+                url.NewUrl = await GenerateFullUrl();
+                await _urlRepository.AddUrl(url);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
         public async Task UpdateUrl(Guid id, string originalUrl, string path)
         {
-            var urlObject = GetUrl(id);
 
-            if(urlObject.Result.OriginalUrl != originalUrl)
+            if (String.IsNullOrEmpty(originalUrl))
             {
-                urlObject.Result.OriginalUrl = originalUrl;
-
+                throw new InvalidOperationException("Url cannot de null.");
             }
-
-            if(path != null)
+            try
             {
-                urlObject.Result.NewUrl = await GenerateCustomPath(path);
-            }
+                var urlObject = GetUrl(id);
 
-            await _urlRepository.UpdateUrl(urlObject.Result);
+                if (urlObject.Result.OriginalUrl != originalUrl)
+                {
+                    urlObject.Result.OriginalUrl = originalUrl;
+
+                }
+
+                if (path != null)
+                {
+                    urlObject.Result.NewUrl = await GenerateCustomPath(path);
+                }
+
+                await _urlRepository.UpdateUrl(urlObject.Result);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            
         }
 
         public async Task<Address> GetUrl(Guid url)
@@ -97,5 +128,10 @@ namespace urlShortener.Services
                 .Select(s => s[random.Next(s.Length)]).ToArray());
         }
 
+        public bool CheckValidUrl(string url)
+        {
+            Regex regex = new Regex(pattern);
+            return regex.IsMatch(url);
+        }
     }
 }
