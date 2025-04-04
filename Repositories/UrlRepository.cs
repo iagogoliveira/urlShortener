@@ -7,13 +7,10 @@ namespace urlShortener.Repositories
     public class UrlRepository : IUrlRepository
     {
         private readonly AppDbContext _context;
-        private readonly IConfiguration _configuration;
 
-        public UrlRepository(AppDbContext context, IConfiguration configuration) 
+        public UrlRepository(AppDbContext context) 
         {
             _context = context;
-            _configuration = configuration;
-
         }
 
 
@@ -44,29 +41,13 @@ namespace urlShortener.Repositories
 
         public async Task<bool> ExistsAsync(string fullShortUrl)
         {
-            try
-            {
-                return await _context.Addresses.AnyAsync(u => u.NewUrl == fullShortUrl);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message.ToString());
-                return false;
-            }
+            return await _context.Addresses.AnyAsync(u => u.NewUrl == fullShortUrl);
         }
 
         public async Task DeleteUrl(Guid id)
         {
             _context.Addresses.Remove(await GetUrl(id));
             await _context.SaveChangesAsync();
-        }
-
-        public string FormatUrl(string path)
-        {
-            string? baseUrl = _configuration["UrlShortener:BaseUrl"];
-            string newUrl = string.Empty;
-            return newUrl = $"{baseUrl}/{path}";
-
         }
 
     }

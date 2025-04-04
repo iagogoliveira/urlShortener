@@ -12,100 +12,43 @@ namespace urlShortener.Controllers
     {
 
         private readonly UrlService _urlService;
-        public UrlController(UrlService urlService) 
+        private readonly RequestHandlerService _requestHandlerService;
+        public UrlController(UrlService urlService, RequestHandlerService requestHandlerService) 
         { 
             _urlService = urlService;
+            _requestHandlerService = requestHandlerService;
         }
 
-        //[Authorize]
+        [Authorize]
         [HttpPost("CreateNewUrl")]
         public async Task<IActionResult> CreateNewUrl([FromBody] CreateNewUrlDto urlDto) 
         {
             var url = new Address(Guid.NewGuid(), urlDto.OriginalUrl, urlDto.UserId);
-
-            try
-            {
-                await _urlService.CreateNewUrl(url);
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return BadRequest(ex.Message);
-            }
-
-            return Ok();
+            return await _requestHandlerService.HandleRequest(() => _urlService.CreateNewUrl(url));
         }
 
         [Authorize]
         [HttpPut("UpdateUrl")]
         public async Task<IActionResult> UpdateUrl([FromBody] UpdateUrlDto urlDto)
         {
-            try
-            {
-                await _urlService.UpdateUrl(urlDto.Id, urlDto.OriginalUrl, urlDto.NewPath);
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return BadRequest(ex.Message);
-            }
-
-            return Ok();
+            return await _requestHandlerService.HandleRequest(() => _urlService.UpdateUrl(urlDto.Id, urlDto.OriginalUrl, urlDto.NewPath));
         }
 
         [Authorize]
         [HttpDelete("DeleteUrl")]
         public async Task<IActionResult> DeleteUrl([FromBody] DeleteUrlDto urlDto)
-        { 
-            try
-            {
-                await _urlService.DeleteUrl(urlDto.Id);
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return BadRequest(ex.Message);
-            }
-
-            return Ok();
+        {
+            return await _requestHandlerService.HandleRequest(() => _urlService.DeleteUrl(urlDto.Id));
         }
 
         [HttpGet("{redirectUrl}")]
         public async Task<IActionResult> RedirectUrl(string redirectUrl)
         {
-            if (redirectUrl == null)
-            {
-                return BadRequest("Url cannot de null.");
-            }
-            try
+            return await _requestHandlerService.HandleRequest(async () =>
             {
                 var urlRedirect = await _urlService.GetUrlRedirect(redirectUrl);
-                return Redirect(urlRedirect.OriginalUrl);
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(ex.ToString());
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-                return BadRequest(ex.ToString());
-            }
+                return (IActionResult)Redirect(urlRedirect.OriginalUrl);
+            });
         }
-
-
-
     }
 }

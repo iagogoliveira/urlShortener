@@ -9,7 +9,6 @@ namespace urlShortener.Repositories
         Task <Address> GetUrlRedirect(string shortUrl);
         Task<Address> UpdateUrl(Address url);
         Task DeleteUrl(Guid id);
-        string FormatUrl(string path); 
         Task<bool> ExistsAsync(string fullShortUrl);
     }
 }
